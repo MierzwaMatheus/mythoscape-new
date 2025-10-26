@@ -16,6 +16,7 @@ from app.routers.chat import router as chat_router
 from app.routers.world_context import router as world_context_router
 from app.routers.admin import router as admin_router
 from app.routers.world import router as world_router
+from app.routers.campaign import router as campaign_router
 from app.dependencies.auth import AuthenticatedUser
 from app.models.errors import ErrorDetail, InternalServerError, AuthenticationError, ValidationError
 
@@ -94,6 +95,7 @@ async def chat_endpoint(request: ChatRequest, user_id: AuthenticatedUser) -> Cha
 # Incluir API v1 com todos os endpoints
 from app.api.v1.api import api_router
 app.include_router(api_router, prefix="/api/v1")
+app.include_router(campaign_router, prefix="/api/v1")
 
 
 @app.get(
