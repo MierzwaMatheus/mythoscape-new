@@ -91,13 +91,7 @@ async def chat_endpoint(request: ChatRequest, user_id: AuthenticatedUser) -> Cha
             ).model_dump()
         )
 
-# Incluir routers existentes
-app.include_router(chat_router)
-app.include_router(world_context_router)
-app.include_router(admin_router)
-app.include_router(world_router)
-
-# Incluir API v1 com sistema multiagente
+# Incluir API v1 com todos os endpoints
 from app.api.v1.api import api_router
 app.include_router(api_router, prefix="/api/v1")
 
