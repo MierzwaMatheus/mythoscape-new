@@ -21,7 +21,6 @@ router = APIRouter(prefix="/world", tags=["world-context"])
 @router.post(
     "/entities",
     response_model=EntityResponse,
-    status_code=201,
     responses={
         401: {"model": AuthenticationError, "description": "Não autenticado"},
         422: {"model": ValidationError, "description": "Dados inválidos"},
@@ -30,41 +29,25 @@ router = APIRouter(prefix="/world", tags=["world-context"])
 )
 async def create_entity(
     request: CreateEntityRequest,
-    user_id: AuthenticatedUser,
-    world_service: WorldContextService = Depends()
+    user_id: AuthenticatedUser
 ) -> EntityResponse:
-    """
-    Cria uma nova entidade no mundo (NPC, Local ou Conhecimento).
-    
-    Args:
-        request: Dados da entidade a ser criada
-        user_id: ID do usuário autenticado
-        world_service: Serviço de contexto do mundo
-        
-    Returns:
-        Dados da entidade criada
-        
-    Raises:
-        HTTPException: Em caso de erro na criação
-    """
+    """Cria uma nova entidade no contexto do mundo."""
     try:
-        entity = await world_service.create_entity(request, user_id)
-        return entity
-    except ValueError as e:
-        raise HTTPException(
-            status_code=422,
-            detail=ErrorDetail(
-                message=str(e),
-                error_code="VALIDATION_ERROR"
-            ).model_dump()
+        service = WorldContextService()
+        entity_data = await service.create_entity(
+            entity_type=request.type.value,
+            data=request.data.model_dump(),
+            user_id=str(user_id),
+            world_id=str(request.world_id)
         )
+        return EntityResponse(**entity_data)
     except Exception as e:
         raise HTTPException(
             status_code=500,
             detail=ErrorDetail(
-                message="Erro interno ao criar entidade",
-                error_code="INTERNAL_ERROR",
-                details={"original_error": str(e)}
+                error="internal_server_error",
+                message="Erro ao criar entidade",
+                details=str(e)
             ).model_dump()
         )
 
@@ -79,36 +62,29 @@ async def create_entity(
 )
 async def list_entities(
     user_id: AuthenticatedUser,
+    world_id: UUID = Query(..., description="ID do mundo"),
     entity_type: EntityType | None = Query(None, description="Filtrar por tipo de entidade"),
     page: int = Query(1, ge=1, description="Número da página"),
-    page_size: int = Query(50, ge=1, le=100, description="Tamanho da página"),
-    world_service: WorldContextService = Depends()
+    per_page: int = Query(10, ge=1, le=100, description="Itens por página")
 ) -> EntitiesListResponse:
-    """
-    Lista entidades do mundo com paginação e filtros.
-    
-    Args:
-        user_id: ID do usuário autenticado
-        entity_type: Tipo de entidade para filtrar (opcional)
-        page: Número da página
-        page_size: Tamanho da página
-        world_service: Serviço de contexto do mundo
-        
-    Returns:
-        Lista paginada de entidades
-    """
+    """Lista entidades do mundo com paginação e filtros."""
     try:
-        entities = await world_service.list_entities(
-            user_id, entity_type, page, page_size
+        service = WorldContextService()
+        entities_data = await service.list_entities(
+            entity_type=entity_type.value if entity_type else None,
+            user_id=str(user_id),
+            world_id=str(world_id),
+            page=page,
+            per_page=per_page
         )
-        return entities
+        return EntitiesListResponse(**entities_data)
     except Exception as e:
         raise HTTPException(
             status_code=500,
             detail=ErrorDetail(
-                message="Erro interno ao listar entidades",
-                error_code="INTERNAL_ERROR",
-                details={"original_error": str(e)}
+                error="internal_server_error",
+                message="Erro ao listar entidades",
+                details=str(e)
             ).model_dump()
         )
 

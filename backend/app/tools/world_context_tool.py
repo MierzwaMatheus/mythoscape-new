@@ -12,18 +12,21 @@ class GetEntitySchema(BaseModel):
     """Schema para busca de entidades."""
     entity_type: str = Field(description="Tipo da entidade: 'npc', 'location' ou 'knowledge'")
     name: str = Field(description="Nome da entidade a ser buscada")
+    world_id: str = Field(description="ID do mundo onde buscar a entidade")
 
 
 class CreateEntitySchema(BaseModel):
     """Schema para criação de entidades."""
     entity_type: str = Field(description="Tipo da entidade: 'npc', 'location' ou 'knowledge'")
+    world_id: str = Field(description="ID do mundo onde criar a entidade")
     data: Dict[str, Any] = Field(description="Dados da entidade em formato JSON")
 
 
 class UpdateEntitySchema(BaseModel):
     """Schema para atualização de entidades."""
-    entity_id: str = Field(description="ID único da entidade a ser atualizada")
-    new_data: Dict[str, Any] = Field(description="Novos dados da entidade em formato JSON")
+    entity_id: str = Field(description="ID da entidade a ser atualizada")
+    world_id: str = Field(description="ID do mundo da entidade")
+    data: Dict[str, Any] = Field(description="Novos dados da entidade em formato JSON")
 
 
 class GetEntityTool(BaseTool):

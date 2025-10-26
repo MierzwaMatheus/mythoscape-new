@@ -90,10 +90,11 @@ class WorldContextService:
         """Inicializa o serviço com o gerenciador de contexto."""
         self.manager = WorldContextManager()
     
-    async def create_entity(self, entity_type: str, data: Dict[str, Any], user_id: str) -> Dict[str, Any]:
+    async def create_entity(self, entity_type: str, data: Dict[str, Any], user_id: str, world_id: str) -> Dict[str, Any]:
         """Cria uma nova entidade com validação."""
-        # Adiciona user_id aos dados
+        # Adiciona user_id e world_id aos dados
         data["user_id"] = user_id
+        data["world_id"] = world_id
         return self.manager.create_entity(entity_type, data)
     
     async def get_entity(self, entity_id: str, user_id: str) -> Optional[Dict[str, Any]]:
@@ -110,9 +111,9 @@ class WorldContextService:
         # TODO: Implementar remoção com verificação de user_id
         return True
     
-    async def list_entities(self, entity_type: Optional[str], user_id: str, page: int = 1, per_page: int = 10) -> Dict[str, Any]:
-        """Lista entidades do usuário com paginação."""
-        # TODO: Implementar listagem com paginação e filtro por user_id
+    async def list_entities(self, entity_type: Optional[str], user_id: str, world_id: str, page: int = 1, per_page: int = 10) -> Dict[str, Any]:
+        """Lista entidades do usuário em um mundo específico com paginação."""
+        # TODO: Implementar listagem com paginação e filtro por user_id e world_id
         return {
             "entities": [],
             "total": 0,

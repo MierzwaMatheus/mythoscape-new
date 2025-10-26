@@ -49,26 +49,27 @@ class KnowledgeData(BaseModel):
 
 
 class CreateEntityRequest(BaseModel):
-    """Requisição para criar uma nova entidade."""
-    type: EntityType
-    name: str = Field(..., min_length=1, max_length=100)
-    data: dict[str, Any]
+    """Modelo para criação de nova entidade no contexto do mundo."""
+    type: EntityType = Field(..., description="Tipo da entidade")
+    world_id: UUID = Field(..., description="ID do mundo onde a entidade será criada")
+    data: NPCData | LocationData | KnowledgeData = Field(..., description="Dados da entidade")
 
 
 class UpdateEntityRequest(BaseModel):
-    """Requisição para atualizar uma entidade existente."""
+    """Modelo para atualização de entidade existente."""
     name: str | None = Field(None, min_length=1, max_length=100)
-    data: dict[str, Any] | None = None
+    data: NPCData | LocationData | KnowledgeData = Field(..., description="Novos dados da entidade")
 
 
 class EntityResponse(BaseModel):
-    """Resposta com dados de uma entidade."""
+    """Modelo de resposta para uma entidade do contexto do mundo."""
     id: UUID
     type: EntityType
-    name: str
-    data: dict[str, Any]
-    created_at: str | None = None
-    updated_at: str | None = None
+    world_id: UUID
+    user_id: UUID
+    data: NPCData | LocationData | KnowledgeData
+    created_at: datetime
+    updated_at: datetime
 
 
 class EntitiesListResponse(BaseModel):

@@ -13,8 +13,9 @@ load_env()
 # Agora importa o RPGAgent após carregar as variáveis de ambiente
 from app.agents.rpg_agent import RPGAgent
 from app.routers.chat import router as chat_router
-from app.routers.world_context import router as world_router
+from app.routers.world_context import router as world_context_router
 from app.routers.admin import router as admin_router
+from app.routers.world import router as world_router
 from app.dependencies.auth import AuthenticatedUser
 from app.models.errors import ErrorDetail, InternalServerError, AuthenticationError, ValidationError
 
@@ -90,10 +91,11 @@ async def chat_endpoint(request: ChatRequest, user_id: AuthenticatedUser) -> Cha
             ).model_dump()
         )
 
-# Inclui os routers
+# Incluir routers
 app.include_router(chat_router)
-app.include_router(world_router)
+app.include_router(world_context_router)
 app.include_router(admin_router)
+app.include_router(world_router)
 
 
 @app.get(
