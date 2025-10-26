@@ -14,7 +14,7 @@ from app.models.errors import (
     InternalServerError, AuthenticationError
 )
 
-router = APIRouter(prefix="/worlds", tags=["worlds"])
+router = APIRouter(prefix="/world", tags=["world"])
 
 
 @router.post(

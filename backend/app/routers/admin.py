@@ -23,7 +23,7 @@ from app.models.session import (
     SystemStatsResponse
 )
 
-router = APIRouter(prefix="/admin", tags=["Administração"])
+router = APIRouter(prefix="/admin", tags=["admin"])
 
 
 @router.post(
