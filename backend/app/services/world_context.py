@@ -81,3 +81,41 @@ class WorldContextManager:
         )
         
         return response.data[0] if response.data else None
+
+
+class WorldContextService:
+    """Serviço para operações de contexto do mundo com validação."""
+    
+    def __init__(self) -> None:
+        """Inicializa o serviço com o gerenciador de contexto."""
+        self.manager = WorldContextManager()
+    
+    async def create_entity(self, entity_type: str, data: Dict[str, Any], user_id: str) -> Dict[str, Any]:
+        """Cria uma nova entidade com validação."""
+        # Adiciona user_id aos dados
+        data["user_id"] = user_id
+        return self.manager.create_entity(entity_type, data)
+    
+    async def get_entity(self, entity_id: str, user_id: str) -> Optional[Dict[str, Any]]:
+        """Obtém uma entidade por ID com verificação de usuário."""
+        # TODO: Implementar busca por ID com verificação de user_id
+        return None
+    
+    async def update_entity(self, entity_id: str, data: Dict[str, Any], user_id: str) -> Optional[Dict[str, Any]]:
+        """Atualiza uma entidade com verificação de usuário."""
+        return self.manager.update_entity(entity_id, data)
+    
+    async def delete_entity(self, entity_id: str, user_id: str) -> bool:
+        """Remove uma entidade com verificação de usuário."""
+        # TODO: Implementar remoção com verificação de user_id
+        return True
+    
+    async def list_entities(self, entity_type: Optional[str], user_id: str, page: int = 1, per_page: int = 10) -> Dict[str, Any]:
+        """Lista entidades do usuário com paginação."""
+        # TODO: Implementar listagem com paginação e filtro por user_id
+        return {
+            "entities": [],
+            "total": 0,
+            "page": page,
+            "per_page": per_page
+        }
