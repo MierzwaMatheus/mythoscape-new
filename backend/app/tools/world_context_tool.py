@@ -35,11 +35,12 @@ class GetEntityTool(BaseTool):
         "Use para consultar informações sobre NPCs, locais ou conhecimentos existentes. "
         "Tipos válidos: 'npc', 'location', 'knowledge'."
     )
-    args_schema = GetEntitySchema
+    args_schema: type[BaseModel] = GetEntitySchema
     
     def __init__(self) -> None:
         super().__init__()
-        self.manager = WorldContextManager()
+        # Inicializa o manager como atributo privado para evitar conflitos com Pydantic
+        self._manager = WorldContextManager()
     
     def _run(self, entity_type: str, name: str) -> str:
         """
@@ -52,7 +53,7 @@ class GetEntityTool(BaseTool):
         Returns:
             String formatada com os dados da entidade ou mensagem de não encontrada.
         """
-        entity = self.manager.get_entity(entity_type, name)
+        entity = self._manager.get_entity(entity_type, name)
         
         if entity:
             return json.dumps(entity, ensure_ascii=False, indent=2)
@@ -70,11 +71,12 @@ class CreateEntityTool(BaseTool):
         "Tipos válidos: 'npc', 'location', 'knowledge'. "
         "Os dados devem incluir pelo menos um campo 'name'."
     )
-    args_schema = CreateEntitySchema
+    args_schema: type[BaseModel] = CreateEntitySchema
     
     def __init__(self) -> None:
         super().__init__()
-        self.manager = WorldContextManager()
+        # Inicializa o manager como atributo privado para evitar conflitos com Pydantic
+        self._manager = WorldContextManager()
     
     def _run(self, entity_type: str, data: Dict[str, Any]) -> str:
         """
@@ -85,10 +87,14 @@ class CreateEntityTool(BaseTool):
             data: Dados da entidade.
             
         Returns:
-            ID da nova entidade criada.
+            String confirmando a criação ou mensagem de erro.
         """
-        entity = self.manager.create_entity(entity_type, data)
-        return entity["id"]
+        entity_id = self._manager.create_entity(entity_type, data)
+        
+        if entity_id:
+            return f"Entidade '{data.get('name', 'sem nome')}' criada com sucesso. ID: {entity_id}"
+        else:
+            return f"Erro ao criar entidade do tipo '{entity_type}'."
 
 
 class UpdateEntityTool(BaseTool):
@@ -100,11 +106,12 @@ class UpdateEntityTool(BaseTool):
         "Use quando o estado de um NPC, local ou conhecimento mudar durante a aventura. "
         "Exemplo: NPC morre, local é destruído, jogador aprende nova informação."
     )
-    args_schema = UpdateEntitySchema
+    args_schema: type[BaseModel] = UpdateEntitySchema
     
     def __init__(self) -> None:
         super().__init__()
-        self.manager = WorldContextManager()
+        # Inicializa o manager como atributo privado para evitar conflitos com Pydantic
+        self._manager = WorldContextManager()
     
     def _run(self, entity_id: str, new_data: Dict[str, Any]) -> str:
         """
@@ -115,11 +122,11 @@ class UpdateEntityTool(BaseTool):
             new_data: Novos dados da entidade.
             
         Returns:
-            Confirmação de atualização ou mensagem de erro.
+            String confirmando a atualização ou mensagem de erro.
         """
-        entity = self.manager.update_entity(entity_id, new_data)
+        success = self._manager.update_entity(entity_id, new_data)
         
-        if entity:
+        if success:
             return f"Entidade com ID '{entity_id}' atualizada com sucesso."
         else:
             return f"Erro: Entidade com ID '{entity_id}' não foi encontrada."
