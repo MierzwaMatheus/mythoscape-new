@@ -1,5 +1,29 @@
-"""Módulo de agentes para o sistema RPG."""
+"""Sistema multiagente para processamento de ações de RPG."""
 
-from .rpg_agent import RPGAgent
+from app.agents.multiagent_graph import MultiAgentGraph
+from app.agents.router import RouterAgent
+from app.agents.synthesizer import SynthesizerAgent
+from app.agents.graph_state import AgentState, SpecialistOutput, VectorStoreUpdate
+from app.agents.routing_tools import ROUTING_TOOLS
+from app.agents.specialists import (
+    WorldAgent, CharacterAgent, MissionAgent, RulesAgent,
+    TimeAgent, ItemsAgent, PlotAgent, SocialAgent
+)
 
-__all__ = ["RPGAgent"]
+__all__ = [
+    "MultiAgentGraph",
+    "RouterAgent", 
+    "SynthesizerAgent",
+    "AgentState",
+    "SpecialistOutput",
+    "VectorStoreUpdate",
+    "ROUTING_TOOLS",
+    "WorldAgent",
+    "CharacterAgent", 
+    "MissionAgent",
+    "RulesAgent",
+    "TimeAgent",
+    "ItemsAgent",
+    "PlotAgent",
+    "SocialAgent"
+]

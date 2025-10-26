@@ -69,12 +69,34 @@ CREATE TABLE IF NOT EXISTS worlds (
     user_id UUID NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,
+    genre_tags JSONB DEFAULT '[]',
+    master_personality VARCHAR(50) DEFAULT 'serious_dark',
     is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Adicionar índices se não existirem
+-- Verificar e adicionar colunas necessárias à tabela worlds
+DO $$
+BEGIN
+    -- Adicionar genre_tags se não existir
+    IF NOT column_exists('worlds', 'genre_tags') THEN
+        ALTER TABLE worlds ADD COLUMN genre_tags JSONB DEFAULT '[]';
+        RAISE NOTICE '%', 'Coluna genre_tags adicionada à tabela worlds';
+    END IF;
+    
+    -- Adicionar master_personality se não existir
+    IF NOT column_exists('worlds', 'master_personality') THEN
+        ALTER TABLE worlds ADD COLUMN master_personality VARCHAR(50) DEFAULT 'serious_dark';
+        RAISE NOTICE '%', 'Coluna master_personality adicionada à tabela worlds';
+    END IF;
+    
+    -- Adicionar campaign_time se não existir
+    IF NOT column_exists('worlds', 'campaign_time') THEN
+        ALTER TABLE worlds ADD COLUMN campaign_time JSONB DEFAULT '{"day": 1, "hour": 12, "minute": 0, "season": "spring", "year": 1}';
+        RAISE NOTICE '%', 'Coluna campaign_time adicionada à tabela worlds';
+    END IF;
+END $$;
 DO $$
 BEGIN
     IF NOT index_exists('idx_worlds_user_id') THEN
@@ -132,8 +154,201 @@ BEGIN
 END $$;
 
 -- =====================================================
--- TABELA WORLD_CONTEXT (Atualizada)
+-- TABELA CHARACTERS (Sistema de Arquétipos e Abordagens)
 -- =====================================================
+
+CREATE TABLE IF NOT EXISTS characters (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    world_id UUID NOT NULL,
+    user_id UUID NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    concept TEXT,
+    archetypes JSONB DEFAULT '[]',
+    approaches JSONB DEFAULT '[]',
+    vitality INTEGER DEFAULT 5 CHECK (vitality >= 1 AND vitality <= 5),
+    inventory JSONB DEFAULT '[]',
+    active_missions JSONB DEFAULT '[]',
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Adicionar foreign key constraints se não existirem
+DO $$
+BEGIN
+    -- FK para worlds
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints 
+        WHERE constraint_name = 'fk_characters_world_id' AND table_name = 'characters'
+    ) THEN
+        ALTER TABLE characters 
+        ADD CONSTRAINT fk_characters_world_id 
+        FOREIGN KEY (world_id) REFERENCES worlds(id) ON DELETE CASCADE;
+        RAISE NOTICE '%', 'Foreign key fk_characters_world_id criada';
+    END IF;
+END $$;
+
+-- Adicionar índices otimizados se não existirem
+DO $$
+BEGIN
+    IF NOT index_exists('idx_characters_world_user') THEN
+        CREATE INDEX idx_characters_world_user ON characters(world_id, user_id);
+        RAISE NOTICE '%', 'Índice idx_characters_world_user criado';
+    END IF;
+    
+    IF NOT index_exists('idx_characters_world_active') THEN
+        CREATE INDEX idx_characters_world_active ON characters(world_id, is_active);
+        RAISE NOTICE '%', 'Índice idx_characters_world_active criado';
+    END IF;
+    
+    IF NOT index_exists('idx_characters_archetypes_gin') THEN
+        CREATE INDEX idx_characters_archetypes_gin ON characters USING GIN(archetypes);
+        RAISE NOTICE '%', 'Índice idx_characters_archetypes_gin criado';
+    END IF;
+    
+    IF NOT index_exists('idx_characters_approaches_gin') THEN
+        CREATE INDEX idx_characters_approaches_gin ON characters USING GIN(approaches);
+        RAISE NOTICE '%', 'Índice idx_characters_approaches_gin criado';
+    END IF;
+END $$;
+
+-- Habilitar RLS se não estiver habilitado
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_tables 
+        WHERE schemaname = 'public' 
+        AND tablename = 'characters' 
+        AND rowsecurity = true
+    ) THEN
+        ALTER TABLE characters ENABLE ROW LEVEL SECURITY;
+        RAISE NOTICE '%', 'RLS habilitado para tabela characters';
+    END IF;
+END $$;
+
+-- Políticas RLS para characters
+DO $$
+BEGIN
+    -- Remover políticas antigas se existirem
+    IF policy_exists('characters', 'Allow service_role full access to characters') THEN
+        DROP POLICY "Allow service_role full access to characters" ON characters;
+    END IF;
+    
+    IF policy_exists('characters', 'Users can access their own characters') THEN
+        DROP POLICY "Users can access their own characters" ON characters;
+    END IF;
+    
+    -- Criar políticas com isolamento por user_id
+    CREATE POLICY "Allow service_role full access to characters" ON characters
+        FOR ALL
+        TO service_role
+        USING (true)
+        WITH CHECK (true);
+    
+    CREATE POLICY "Users can access their own characters" ON characters
+        FOR ALL
+        TO authenticated
+        USING (auth.uid() = user_id)
+        WITH CHECK (auth.uid() = user_id);
+    
+    RAISE NOTICE '%', 'Políticas RLS para characters configuradas com isolamento por user_id';
+END $$;
+
+-- =====================================================
+-- TABELA PLAYER_NOTES (Sistema de Anotações)
+-- =====================================================
+
+CREATE TABLE IF NOT EXISTS player_notes (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    world_id UUID NOT NULL,
+    user_id UUID NOT NULL,
+    category VARCHAR(50) NOT NULL CHECK (category IN ('characters', 'places', 'lore', 'general')),
+    title VARCHAR(255) NOT NULL,
+    content TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Adicionar foreign key constraints se não existirem
+DO $$
+BEGIN
+    -- FK para worlds
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints 
+        WHERE constraint_name = 'fk_player_notes_world_id' AND table_name = 'player_notes'
+    ) THEN
+        ALTER TABLE player_notes 
+        ADD CONSTRAINT fk_player_notes_world_id 
+        FOREIGN KEY (world_id) REFERENCES worlds(id) ON DELETE CASCADE;
+        RAISE NOTICE '%', 'Foreign key fk_player_notes_world_id criada';
+    END IF;
+END $$;
+
+-- Adicionar índices otimizados se não existirem
+DO $$
+BEGIN
+    IF NOT index_exists('idx_player_notes_world_user') THEN
+        CREATE INDEX idx_player_notes_world_user ON player_notes(world_id, user_id);
+        RAISE NOTICE '%', 'Índice idx_player_notes_world_user criado';
+    END IF;
+    
+    IF NOT index_exists('idx_player_notes_category') THEN
+        CREATE INDEX idx_player_notes_category ON player_notes(world_id, category);
+        RAISE NOTICE '%', 'Índice idx_player_notes_category criado';
+    END IF;
+    
+    IF NOT index_exists('idx_player_notes_title_gin') THEN
+        CREATE INDEX idx_player_notes_title_gin ON player_notes USING GIN(to_tsvector('portuguese', title));
+        RAISE NOTICE '%', 'Índice idx_player_notes_title_gin criado';
+    END IF;
+    
+    IF NOT index_exists('idx_player_notes_content_gin') THEN
+        CREATE INDEX idx_player_notes_content_gin ON player_notes USING GIN(to_tsvector('portuguese', content));
+        RAISE NOTICE '%', 'Índice idx_player_notes_content_gin criado';
+    END IF;
+END $$;
+
+-- Habilitar RLS se não estiver habilitado
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_tables 
+        WHERE schemaname = 'public' 
+        AND tablename = 'player_notes' 
+        AND rowsecurity = true
+    ) THEN
+        ALTER TABLE player_notes ENABLE ROW LEVEL SECURITY;
+        RAISE NOTICE '%', 'RLS habilitado para tabela player_notes';
+    END IF;
+END $$;
+
+-- Políticas RLS para player_notes
+DO $$
+BEGIN
+    -- Remover políticas antigas se existirem
+    IF policy_exists('player_notes', 'Allow service_role full access to player_notes') THEN
+        DROP POLICY "Allow service_role full access to player_notes" ON player_notes;
+    END IF;
+    
+    IF policy_exists('player_notes', 'Users can access their own notes') THEN
+        DROP POLICY "Users can access their own notes" ON player_notes;
+    END IF;
+    
+    -- Criar políticas com isolamento por user_id
+    CREATE POLICY "Allow service_role full access to player_notes" ON player_notes
+        FOR ALL
+        TO service_role
+        USING (true)
+        WITH CHECK (true);
+    
+    CREATE POLICY "Users can access their own notes" ON player_notes
+        FOR ALL
+        TO authenticated
+        USING (auth.uid() = user_id)
+        WITH CHECK (auth.uid() = user_id);
+    
+    RAISE NOTICE '%', 'Políticas RLS para player_notes configuradas com isolamento por user_id';
+END $$;
 -- Nota: Este script assume que a tabela world_context já existe.
 -- Se ela não existir, você precisará de um CREATE TABLE IF NOT EXISTS.
 
@@ -383,6 +598,105 @@ AS $$
 $$;
 
 -- =====================================================
+-- TABELA MISSIONS (Sistema de Missões Dinâmicas)
+-- =====================================================
+
+CREATE TABLE IF NOT EXISTS missions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    world_id UUID NOT NULL,
+    user_id UUID NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'completed', 'failed', 'expired')),
+    created_at_ingame JSONB DEFAULT '{"day": 1, "hour": 12, "minute": 0, "season": "spring", "year": 1}',
+    expires_at_ingame JSONB,
+    plot_twist_trigger TEXT,
+    secret_plot_info TEXT,
+    success_outcome TEXT,
+    failure_outcome TEXT,
+    expiration_outcome TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Adicionar foreign key constraints se não existirem
+DO $$
+BEGIN
+    -- FK para worlds
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints 
+        WHERE constraint_name = 'fk_missions_world_id' AND table_name = 'missions'
+    ) THEN
+        ALTER TABLE missions 
+        ADD CONSTRAINT fk_missions_world_id 
+        FOREIGN KEY (world_id) REFERENCES worlds(id) ON DELETE CASCADE;
+        RAISE NOTICE '%', 'Foreign key fk_missions_world_id criada';
+    END IF;
+END $$;
+
+-- Adicionar índices otimizados se não existirem
+DO $$
+BEGIN
+    IF NOT index_exists('idx_missions_world_user') THEN
+        CREATE INDEX idx_missions_world_user ON missions(world_id, user_id);
+        RAISE NOTICE '%', 'Índice idx_missions_world_user criado';
+    END IF;
+    
+    IF NOT index_exists('idx_missions_world_status') THEN
+        CREATE INDEX idx_missions_world_status ON missions(world_id, status);
+        RAISE NOTICE '%', 'Índice idx_missions_world_status criado';
+    END IF;
+    
+    IF NOT index_exists('idx_missions_expires_at_gin') THEN
+        CREATE INDEX idx_missions_expires_at_gin ON missions USING GIN(expires_at_ingame);
+        RAISE NOTICE '%', 'Índice idx_missions_expires_at_gin criado';
+    END IF;
+END $$;
+
+-- Habilitar RLS se não estiver habilitado
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_tables 
+        WHERE schemaname = 'public' 
+        AND tablename = 'missions' 
+        AND rowsecurity = true
+    ) THEN
+        ALTER TABLE missions ENABLE ROW LEVEL SECURITY;
+        RAISE NOTICE '%', 'RLS habilitado para tabela missions';
+    END IF;
+END $$;
+
+-- Políticas RLS para missions
+DO $$
+BEGIN
+    -- Remover políticas antigas se existirem
+    IF policy_exists('missions', 'Allow service_role full access to missions') THEN
+        DROP POLICY "Allow service_role full access to missions" ON missions;
+    END IF;
+    
+    IF policy_exists('missions', 'Users can access their own missions') THEN
+        DROP POLICY "Users can access their own missions" ON missions;
+    END IF;
+    
+    -- Criar políticas com isolamento por user_id
+    CREATE POLICY "Allow service_role full access to missions" ON missions
+        FOR ALL
+        TO service_role
+        USING (true)
+        WITH CHECK (true);
+    
+    -- Política para usuários autenticados acessarem apenas suas próprias missões
+    CREATE POLICY "Users can access their own missions" ON missions
+        FOR ALL
+        TO authenticated
+        USING (auth.uid() = user_id)
+        WITH CHECK (auth.uid() = user_id);
+    
+    RAISE NOTICE '%', 'Políticas RLS para missions configuradas com isolamento por user_id';
+END $$;
+
+-- =====================================================
 -- COMENTÁRIOS E DOCUMENTAÇÃO
 -- =====================================================
 
@@ -394,8 +708,186 @@ COMMENT ON TABLE rpg_embeddings IS 'Tabela para armazenar embeddings para sistem
 COMMENT ON COLUMN rpg_embeddings.content IS 'Conteúdo textual que foi convertido em embedding';
 COMMENT ON COLUMN rpg_embeddings.metadata IS 'Metadados associados ao conteúdo (world_id, entity_id, etc.)';
 COMMENT ON COLUMN rpg_embeddings.embedding IS 'Vetor de embedding (1536 dimensões para OpenAI)';
+COMMENT ON TABLE characters IS 'Armazena os personagens dos jogadores com sistema SAA';
+COMMENT ON TABLE player_notes IS 'Armazena as anotações organizadas dos jogadores';
+COMMENT ON TABLE missions IS 'Armazena as missões dinâmicas com prazos e plot twists';
+COMMENT ON COLUMN missions.created_at_ingame IS 'Tempo do jogo quando a missão foi criada';
+COMMENT ON COLUMN missions.expires_at_ingame IS 'Tempo do jogo quando a missão expira';
+COMMENT ON COLUMN missions.plot_twist_trigger IS 'Condição que ativa um plot twist';
+COMMENT ON COLUMN missions.secret_plot_info IS 'Informações secretas que apenas a IA conhece';
 COMMENT ON FUNCTION match_embeddings IS 'Função para buscar embeddings similares baseado em cosine similarity';
 COMMENT ON FUNCTION match_embeddings_by_world IS 'Função para buscar embeddings similares em um mundo específico';
+
+-- =====================================================
+-- TABELA EXECUTION_LOGS (Sistema de Logs de Execução do Multiagente)
+-- =====================================================
+
+CREATE TABLE IF NOT EXISTS execution_logs (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL,
+    input_text TEXT NOT NULL,
+    output_narrative TEXT,
+    execution_time FLOAT DEFAULT 0.0,
+    agents_used JSONB DEFAULT '[]',
+    success BOOLEAN DEFAULT true,
+    metadata JSONB DEFAULT '{}',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Adicionar índices otimizados se não existirem
+DO $$
+BEGIN
+    IF NOT index_exists('idx_execution_logs_user_id') THEN
+        CREATE INDEX idx_execution_logs_user_id ON execution_logs(user_id);
+        RAISE NOTICE '%', 'Índice idx_execution_logs_user_id criado';
+    END IF;
+    
+    IF NOT index_exists('idx_execution_logs_user_created') THEN
+        CREATE INDEX idx_execution_logs_user_created ON execution_logs(user_id, created_at DESC);
+        RAISE NOTICE '%', 'Índice idx_execution_logs_user_created criado';
+    END IF;
+    
+    IF NOT index_exists('idx_execution_logs_success') THEN
+        CREATE INDEX idx_execution_logs_success ON execution_logs(success);
+        RAISE NOTICE '%', 'Índice idx_execution_logs_success criado';
+    END IF;
+    
+    IF NOT index_exists('idx_execution_logs_agents_gin') THEN
+        CREATE INDEX idx_execution_logs_agents_gin ON execution_logs USING GIN(agents_used);
+        RAISE NOTICE '%', 'Índice idx_execution_logs_agents_gin criado';
+    END IF;
+    
+    IF NOT index_exists('idx_execution_logs_metadata_gin') THEN
+        CREATE INDEX idx_execution_logs_metadata_gin ON execution_logs USING GIN(metadata);
+        RAISE NOTICE '%', 'Índice idx_execution_logs_metadata_gin criado';
+    END IF;
+END $$;
+
+-- Habilitar RLS se não estiver habilitado
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_tables 
+        WHERE schemaname = 'public' 
+        AND tablename = 'execution_logs' 
+        AND rowsecurity = true
+    ) THEN
+        ALTER TABLE execution_logs ENABLE ROW LEVEL SECURITY;
+        RAISE NOTICE '%', 'RLS habilitado para tabela execution_logs';
+    END IF;
+END $$;
+
+-- Políticas RLS para execution_logs
+DO $$
+BEGIN
+    -- Remover políticas antigas se existirem
+    IF policy_exists('execution_logs', 'Allow service_role full access to execution_logs') THEN
+        DROP POLICY "Allow service_role full access to execution_logs" ON execution_logs;
+    END IF;
+    
+    IF policy_exists('execution_logs', 'Users can access their own execution logs') THEN
+        DROP POLICY "Users can access their own execution logs" ON execution_logs;
+    END IF;
+    
+    -- Criar políticas com isolamento por user_id
+    CREATE POLICY "Allow service_role full access to execution_logs" ON execution_logs
+        FOR ALL
+        TO service_role
+        USING (true)
+        WITH CHECK (true);
+    
+    CREATE POLICY "Users can access their own execution logs" ON execution_logs
+        FOR ALL
+        TO authenticated
+        USING (auth.uid() = user_id)
+        WITH CHECK (auth.uid() = user_id);
+    
+    RAISE NOTICE '%', 'Políticas RLS para execution_logs configuradas com isolamento por user_id';
+END $$;
+
+-- =====================================================
+-- TABELA USERS (Sistema de Usuários)
+-- =====================================================
+
+CREATE TABLE IF NOT EXISTS users (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    name VARCHAR(255),
+    avatar_url TEXT,
+    is_active BOOLEAN DEFAULT true,
+    preferences JSONB DEFAULT '{}',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    last_login TIMESTAMP WITH TIME ZONE
+);
+
+-- Adicionar índices otimizados se não existirem
+DO $$
+BEGIN
+    IF NOT index_exists('idx_users_email') THEN
+        CREATE UNIQUE INDEX idx_users_email ON users(email);
+        RAISE NOTICE '%', 'Índice idx_users_email criado';
+    END IF;
+    
+    IF NOT index_exists('idx_users_active') THEN
+        CREATE INDEX idx_users_active ON users(is_active);
+        RAISE NOTICE '%', 'Índice idx_users_active criado';
+    END IF;
+    
+    IF NOT index_exists('idx_users_preferences_gin') THEN
+        CREATE INDEX idx_users_preferences_gin ON users USING GIN(preferences);
+        RAISE NOTICE '%', 'Índice idx_users_preferences_gin criado';
+    END IF;
+END $$;
+
+-- Habilitar RLS se não estiver habilitado
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_tables 
+        WHERE schemaname = 'public' 
+        AND tablename = 'users' 
+        AND rowsecurity = true
+    ) THEN
+        ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+        RAISE NOTICE '%', 'RLS habilitado para tabela users';
+    END IF;
+END $$;
+
+-- Políticas RLS para users
+DO $$
+BEGIN
+    -- Remover políticas antigas se existirem
+    IF policy_exists('users', 'Allow service_role full access to users') THEN
+        DROP POLICY "Allow service_role full access to users" ON users;
+    END IF;
+    
+    IF policy_exists('users', 'Users can access their own profile') THEN
+        DROP POLICY "Users can access their own profile" ON users;
+    END IF;
+    
+    -- Criar políticas com isolamento por user_id
+    CREATE POLICY "Allow service_role full access to users" ON users
+        FOR ALL
+        TO service_role
+        USING (true)
+        WITH CHECK (true);
+    
+    CREATE POLICY "Users can access their own profile" ON users
+        FOR ALL
+        TO authenticated
+        USING (auth.uid() = id)
+        WITH CHECK (auth.uid() = id);
+    
+    RAISE NOTICE '%', 'Políticas RLS para users configuradas com isolamento por user_id';
+END $$;
+
+-- Trigger para atualizar updated_at automaticamente na tabela users
+DROP TRIGGER IF EXISTS update_users_updated_at ON users;
+CREATE TRIGGER update_users_updated_at
+    BEFORE UPDATE ON users
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
 
 -- =====================================================
 -- VERIFICAÇÃO FINAL E VALIDAÇÃO DE IDEMPOTÊNCIA
@@ -422,11 +914,47 @@ BEGIN
         RAISE EXCEPTION 'ERRO: Tabela rpg_embeddings não foi criada';
     END IF;
     
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'characters') THEN
+        RAISE NOTICE '%', '✓ Tabela characters verificada.';
+    ELSE
+        RAISE EXCEPTION 'ERRO: Tabela characters não foi criada';
+    END IF;
+    
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'player_notes') THEN
+        RAISE NOTICE '%', '✓ Tabela player_notes verificada.';
+    ELSE
+        RAISE EXCEPTION 'ERRO: Tabela player_notes não foi criada';
+    END IF;
+    
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'missions') THEN
+        RAISE NOTICE '%', '✓ Tabela missions verificada.';
+    ELSE
+        RAISE EXCEPTION 'ERRO: Tabela missions não foi criada';
+    END IF;
+    
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'execution_logs') THEN
+        RAISE NOTICE '%', '✓ Tabela execution_logs verificada.';
+    ELSE
+        RAISE EXCEPTION 'ERRO: Tabela execution_logs não foi criada';
+    END IF;
+    
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'users') THEN
+        RAISE NOTICE '%', '✓ Tabela users verificada.';
+    ELSE
+        RAISE EXCEPTION 'ERRO: Tabela users não foi criada';
+    END IF;
+    
     -- Verificar colunas críticas
     IF column_exists('world_context', 'world_id') AND column_exists('world_context', 'user_id') THEN
         RAISE NOTICE '%', '✓ Colunas de isolamento em world_context verificadas.';
     ELSE
         RAISE EXCEPTION 'ERRO: Colunas de isolamento ausentes em world_context';
+    END IF;
+    
+    IF column_exists('worlds', 'campaign_time') THEN
+        RAISE NOTICE '%', '✓ Coluna campaign_time em worlds verificada.';
+    ELSE
+        RAISE EXCEPTION 'ERRO: Coluna campaign_time ausente em worlds';
     END IF;
     
     -- Verificar índices críticos
@@ -449,6 +977,12 @@ BEGIN
     RAISE NOTICE '%', '   - Isolamento de dados por world_id e user_id';
     RAISE NOTICE '%', '   - RAG com busca isolada por mundo';
     RAISE NOTICE '%', '   - Políticas RLS para segurança';
+    RAISE NOTICE '%', '   - Sistema de Arquétipos e Abordagens (SAA)';
+    RAISE NOTICE '%', '   - Sistema de Anotações organizadas';
+    RAISE NOTICE '%', '   - Sistema de Missões Dinâmicas com tempo';
+    RAISE NOTICE '%', '   - Sistema de Tempo da Campanha';
+    RAISE NOTICE '%', '   - Sistema de Logs de Execução do Multiagente';
+    RAISE NOTICE '%', '   - Sistema de Usuários com autenticação';
     RAISE NOTICE '%', '   - Script 100% idempotente';
 END $$;
 

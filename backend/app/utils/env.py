@@ -21,6 +21,27 @@ def load_env() -> None:
         load_dotenv()
 
 
+def get_env_var(var_name: str, default: str = None) -> str:
+    """
+    Obtém uma variável de ambiente.
+    
+    Args:
+        var_name: Nome da variável de ambiente
+        default: Valor padrão se a variável não existir
+        
+    Returns:
+        Valor da variável de ambiente
+        
+    Raises:
+        ValueError: Se a variável não estiver definida e não houver valor padrão
+    """
+    load_env()
+    value = os.getenv(var_name, default)
+    if value is None:
+        raise ValueError(f"{var_name} não está definida nas variáveis de ambiente")
+    return value
+
+
 def get_supabase_url() -> str:
     """
     Obtém a URL do Supabase das variáveis de ambiente.
