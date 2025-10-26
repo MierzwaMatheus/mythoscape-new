@@ -1,0 +1,35 @@
+# Core FastAPI dependencies
+fastapi==0.120.0
+uvicorn==0.38.0
+pydantic==2.12.3
+pydantic-settings==2.11.0
+
+# LangChain ecosystem
+langchain==1.0.2
+langchain-core==1.0.1
+langchain-openai==1.0.1
+langchain-community==0.4
+langgraph==1.0.1
+
+# OpenAI integration
+openai==2.6.1
+tiktoken==0.12.0
+
+# Supabase integration
+supabase==2.22.2
+
+# Environment management
+python-dotenv==1.1.1
+
+# HTTP client
+httpx==0.28.1
+
+# Async support
+anyio==4.11.0
+
+# JSON handling
+orjson==3.11.4
+
+# Utilities
+tenacity==9.1.2
+pyyaml==6.0.3

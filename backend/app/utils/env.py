@@ -1,5 +1,6 @@
 """Módulo para carregamento de variáveis de ambiente."""
 
+import os
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -18,3 +19,54 @@ def load_env() -> None:
     else:
         # Fallback para .env se .env.local não existir
         load_dotenv()
+
+
+def get_supabase_url() -> str:
+    """
+    Obtém a URL do Supabase das variáveis de ambiente.
+    
+    Returns:
+        URL do Supabase
+        
+    Raises:
+        ValueError: Se a variável não estiver definida
+    """
+    load_env()
+    url = os.getenv("SUPABASE_URL")
+    if not url:
+        raise ValueError("SUPABASE_URL não está definida nas variáveis de ambiente")
+    return url
+
+
+def get_supabase_anon_key() -> str:
+    """
+    Obtém a chave anônima do Supabase das variáveis de ambiente.
+    
+    Returns:
+        Chave anônima do Supabase
+        
+    Raises:
+        ValueError: Se a variável não estiver definida
+    """
+    load_env()
+    key = os.getenv("SUPABASE_ANON_KEY")
+    if not key:
+        raise ValueError("SUPABASE_ANON_KEY não está definida nas variáveis de ambiente")
+    return key
+
+
+def get_supabase_service_key() -> str:
+    """
+    Obtém a chave de service role do Supabase das variáveis de ambiente.
+    
+    Returns:
+        Chave de service role do Supabase
+        
+    Raises:
+        ValueError: Se a variável não estiver definida
+    """
+    load_env()
+    key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+    if not key:
+        raise ValueError("SUPABASE_SERVICE_ROLE_KEY não está definida nas variáveis de ambiente")
+    return key
