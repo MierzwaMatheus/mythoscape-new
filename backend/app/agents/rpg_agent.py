@@ -57,7 +57,7 @@ class RPGAgent:
         self._agent_executor = create_react_agent(
             model=self._llm,
             tools=world_context_tools,
-            state_modifier=self._system_prompt
+            prompt=self._system_prompt
         )
     
     def _create_system_prompt(self) -> str:
