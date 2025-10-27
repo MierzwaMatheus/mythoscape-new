@@ -95,7 +95,7 @@ async def chat_endpoint(request: ChatRequest, user_id: AuthenticatedUser) -> Cha
 # Incluir API v1 com todos os endpoints
 from app.api.v1.api import api_router
 app.include_router(api_router, prefix="/api/v1")
-app.include_router(campaign_router, prefix="/api/v1")
+app.include_router(campaign_router)
 
 
 @app.get(

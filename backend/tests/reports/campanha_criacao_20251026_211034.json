@@ -1,0 +1,51 @@
+{
+  "test_name": "campanha_criacao",
+  "timestamp": "2025-10-26T21:10:34.941369",
+  "success": false,
+  "details": "Falha ao criar campanha: {'message': 'new row violates row-level security policy for table \"campaigns\"', 'code': '42501', 'hint': None, 'details': None}",
+  "data": {
+    "timestamp_inicio": "2025-10-26T21:10:09.693899",
+    "etapas": [
+      {
+        "etapa": "autenticacao",
+        "sucesso": true,
+        "timestamp": "2025-10-26T21:10:10.675102"
+      },
+      {
+        "etapa": "preparacao_requisicao",
+        "sucesso": true,
+        "timestamp": "2025-10-26T21:10:10.675609"
+      },
+      {
+        "etapa": "criacao_campanha",
+        "sucesso": false,
+        "timestamp": "2025-10-26T21:10:34.941043"
+      }
+    ],
+    "dados_campanha": {},
+    "persistencia": {},
+    "user_id": "bfd809ef-95d8-4479-a896-66af3a34f9d6",
+    "dados_requisicao": {
+      "name": "Campanha de Teste Completo",
+      "genre_tags": [
+        "fantasy",
+        "medieval",
+        "magic"
+      ],
+      "inspiration": "Uma jornada épica em um mundo de magia e mistério",
+      "master_personality": "serious_dark",
+      "character_concept": "Um mago estudioso que busca conhecimentos proibidos",
+      "character_name": "Eldrin",
+      "character_archetypes": [
+        "scholar",
+        "mystic",
+        "survivor"
+      ],
+      "character_approaches": [
+        "careful",
+        "clever"
+      ]
+    },
+    "erro": "Falha ao criar campanha: {'message': 'new row violates row-level security policy for table \"campaigns\"', 'code': '42501', 'hint': None, 'details': None}"
+  }
+}

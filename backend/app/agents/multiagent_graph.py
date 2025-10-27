@@ -8,13 +8,23 @@ from datetime import datetime
 from langgraph.graph import StateGraph, END
 from langchain_core.runnables import RunnableConfig
 
-from app.agents.graph_state import AgentState, SpecialistOutput, VectorStoreUpdate
+from app.agents.graph_state import AgentState, SpecialistOutput, VectorStoreUpdate, GraphState
 from app.agents.router import RouterAgent
 from app.agents.synthesizer import SynthesizerAgent
 from app.agents.specialists import (
     WorldAgent, CharacterAgent, MissionAgent, RulesAgent,
     TimeAgent, ItemsAgent, PlotAgent, SocialAgent
 )
+
+def create_rpg_agent_graph():
+    """
+    Cria e retorna uma instância do grafo de agentes RPG.
+    Esta função é utilizada para testes e inicialização do sistema.
+    
+    Returns:
+        MultiAgentGraph: Uma instância configurada do grafo multiagente.
+    """
+    return MultiAgentGraph()
 
 
 class MultiAgentGraph:

@@ -1,0 +1,178 @@
+=== Relatório de Teste: campanha_criacao ===
+Data/Hora: 2025-10-26 21:20:15
+Status: FALHA
+==================================================
+
+DETALHES:
+Alguns dados essenciais da campanha estão faltando
+
+--------------------------------------------------
+
+timestamp_inicio:
+2025-10-26T21:19:53.916273
+
+etapas:
+[
+  {
+    "etapa": "autenticacao",
+    "sucesso": true,
+    "timestamp": "2025-10-26T21:19:54.970196"
+  },
+  {
+    "etapa": "preparacao_requisicao",
+    "sucesso": true,
+    "timestamp": "2025-10-26T21:19:54.970805"
+  },
+  {
+    "etapa": "criacao_campanha",
+    "sucesso": true,
+    "timestamp": "2025-10-26T21:20:15.111144"
+  }
+]
+
+dados_campanha:
+{
+  "campaignName": "Campanha de Teste Completo",
+  "genre": "fantasy",
+  "theme": "medieval, magic",
+  "inspiration": "Uma jornada épica em um mundo de magia e mistério",
+  "setting": {
+    "worldDescription": "O mundo de Eldoria é uma terra de antigos segredos e poderosas magias. Seus reinos são governados por reis e rainhas que lutam por poder, enquanto ordens de magos guardam conhecimentos que remontam à criação do mundo. Florestas sombrias e vastos desertos ocultam ruínas de civilizações perdidas, cada uma com seus próprios mistérios e horrores. No coração de Eldoria está a Torre do Arcanum, um bastião do conhecimento arcano, seu topo envolto em nuvens de energia mágica. Na cidade de Veloria, o comércio prospera, mas rumores de uma sombra crescente nas Montanhas Negras perturbam a paz."
+  },
+  "npc": [
+    {
+      "name": "Eldrin, o Sábio",
+      "description": "Um ancião mago e guardião da Torre do Arcanum. Ele é uma fonte de vasto conhecimento, mas suas palavras são frequentemente enigmáticas.",
+      "role": "Conselheiro",
+      "traits": [
+        "wise",
+        "cryptic"
+      ]
+    },
+    {
+      "name": "Lyra, a Mercadora",
+      "description": "Uma comerciante astuta que conhece todos os segredos de Veloria. Sempre em busca de oportunidades, ela é tanto uma aliada quanto uma adversária.",
+      "role": "Informante",
+      "traits": [
+        "cunning",
+        "resourceful"
+      ]
+    }
+  ],
+  "locations": [
+    {
+      "name": "Torre do Arcanum",
+      "description": "Uma majestosa torre de pedra branca, adornada com runas antigas. Ela se ergue como uma sentinela do conhecimento mágico, acessível apenas àqueles considerados dignos."
+    },
+    {
+      "name": "Veloria",
+      "description": "Uma cidade vibrante e movimentada, conhecida por seu mercado diversificado e sua posição estratégica como ponto de encontro para aventureiros e mercadores."
+    }
+  ],
+  "openingScene": {
+    "description": "A noite cai sobre Eldoria. A lua cheia ilumina a Torre do Arcanum, lançando longas sombras que dançam como espectros sobre o chão. Dentro da torre, o silêncio é quebrado apenas pelo som de pergaminhos sendo desdobrados. O Mestre olha com olhos sombrios para o protagonista, sua voz grave ecoando nas paredes de pedra: 'Há saberes que jamais deveriam ser tocados, e ainda assim, o destino chama por aqueles ousados o suficiente para caminhar na linha tênue entre luz e escuridão. Aquele que busca conhecimento proibido deve estar preparado para pagar o preço.'"
+  },
+  "protagonist": {
+    "concept": "Um mago estudioso que busca conhecimentos proibidos",
+    "archetypes": [
+      "scholar",
+      "mystic",
+      "survivor"
+    ],
+    "approaches": {
+      "careful": "excellent",
+      "clever": "good"
+    },
+    "characterSheet": {
+      "name": "Aldorin, o Buscador",
+      "background": "Criado entre tomos antigos e lendas esquecidas, Aldorin sempre foi fascinado pelo que é proibido ou esquecido. Sua busca incessante por conhecimento proibido é tanto sua força quanto sua maior fraqueza.",
+      "skills": {
+        "arcana": "superb",
+        "history": "great",
+        "survival": "good"
+      },
+      "magic": [
+        "firebolt",
+        "teleport",
+        "shield"
+      ]
+    }
+  },
+  "initialTime": "Noite de Lua Cheia",
+  "initialQuest": {
+    "title": "O Segredo das Sombras",
+    "objective": "Investigue os rumores de uma presença misteriosa nas Montanhas Negras e descubra quaisquer segredos mágicos que possam estar escondidos lá. Traga suas descobertas à Torre do Arcanum para avaliação."
+  },
+  "id": "15d6aac9-30fb-44f5-98d6-4429f85c2363"
+}
+
+persistencia:
+{
+  "campaigns": {
+    "encontrado": true,
+    "timestamp": "2025-10-26T21:20:15.286824",
+    "dados": {
+      "id": "15d6aac9-30fb-44f5-98d6-4429f85c2363",
+      "user_id": "bfd809ef-95d8-4479-a896-66af3a34f9d6",
+      "name": "Campanha de Teste Completo",
+      "genre_tags": "[\"fantasy\", \"medieval\", \"magic\"]",
+      "master_personality": "serious_dark",
+      "world_description": "",
+      "campaign_data": "{\"campaignName\": \"Campanha de Teste Completo\", \"genre\": \"fantasy\", \"theme\": \"medieval, magic\", \"inspiration\": \"Uma jornada \\u00e9pica em um mundo de magia e mist\\u00e9rio\", \"setting\": {\"worldDescription\": \"O mundo de Eldoria \\u00e9 uma terra de antigos segredos e poderosas magias. Seus reinos s\\u00e3o governados por reis e rainhas que lutam por poder, enquanto ordens de magos guardam conhecimentos que remontam \\u00e0 cria\\u00e7\\u00e3o do mundo. Florestas sombrias e vastos desertos ocultam ru\\u00ednas de civiliza\\u00e7\\u00f5es perdidas, cada uma com seus pr\\u00f3prios mist\\u00e9rios e horrores. No cora\\u00e7\\u00e3o de Eldoria est\\u00e1 a Torre do Arcanum, um basti\\u00e3o do conhecimento arcano, seu topo envolto em nuvens de energia m\\u00e1gica. Na cidade de Veloria, o com\\u00e9rcio prospera, mas rumores de uma sombra crescente nas Montanhas Negras perturbam a paz.\"}, \"npc\": [{\"name\": \"Eldrin, o S\\u00e1bio\", \"description\": \"Um anci\\u00e3o mago e guardi\\u00e3o da Torre do Arcanum. Ele \\u00e9 uma fonte de vasto conhecimento, mas suas palavras s\\u00e3o frequentemente enigm\\u00e1ticas.\", \"role\": \"Conselheiro\", \"traits\": [\"wise\", \"cryptic\"]}, {\"name\": \"Lyra, a Mercadora\", \"description\": \"Uma comerciante astuta que conhece todos os segredos de Veloria. Sempre em busca de oportunidades, ela \\u00e9 tanto uma aliada quanto uma advers\\u00e1ria.\", \"role\": \"Informante\", \"traits\": [\"cunning\", \"resourceful\"]}], \"locations\": [{\"name\": \"Torre do Arcanum\", \"description\": \"Uma majestosa torre de pedra branca, adornada com runas antigas. Ela se ergue como uma sentinela do conhecimento m\\u00e1gico, acess\\u00edvel apenas \\u00e0queles considerados dignos.\"}, {\"name\": \"Veloria\", \"description\": \"Uma cidade vibrante e movimentada, conhecida por seu mercado diversificado e sua posi\\u00e7\\u00e3o estrat\\u00e9gica como ponto de encontro para aventureiros e mercadores.\"}], \"openingScene\": {\"description\": \"A noite cai sobre Eldoria. A lua cheia ilumina a Torre do Arcanum, lan\\u00e7ando longas sombras que dan\\u00e7am como espectros sobre o ch\\u00e3o. Dentro da torre, o sil\\u00eancio \\u00e9 quebrado apenas pelo som de pergaminhos sendo desdobrados. O Mestre olha com olhos sombrios para o protagonista, sua voz grave ecoando nas paredes de pedra: 'H\\u00e1 saberes que jamais deveriam ser tocados, e ainda assim, o destino chama por aqueles ousados o suficiente para caminhar na linha t\\u00eanue entre luz e escurid\\u00e3o. Aquele que busca conhecimento proibido deve estar preparado para pagar o pre\\u00e7o.'\"}, \"protagonist\": {\"concept\": \"Um mago estudioso que busca conhecimentos proibidos\", \"archetypes\": [\"scholar\", \"mystic\", \"survivor\"], \"approaches\": {\"careful\": \"excellent\", \"clever\": \"good\"}, \"characterSheet\": {\"name\": \"Aldorin, o Buscador\", \"background\": \"Criado entre tomos antigos e lendas esquecidas, Aldorin sempre foi fascinado pelo que \\u00e9 proibido ou esquecido. Sua busca incessante por conhecimento proibido \\u00e9 tanto sua for\\u00e7a quanto sua maior fraqueza.\", \"skills\": {\"arcana\": \"superb\", \"history\": \"great\", \"survival\": \"good\"}, \"magic\": [\"firebolt\", \"teleport\", \"shield\"]}}, \"initialTime\": \"Noite de Lua Cheia\", \"initialQuest\": {\"title\": \"O Segredo das Sombras\", \"objective\": \"Investigue os rumores de uma presen\\u00e7a misteriosa nas Montanhas Negras e descubra quaisquer segredos m\\u00e1gicos que possam estar escondidos l\\u00e1. Traga suas descobertas \\u00e0 Torre do Arcanum para avalia\\u00e7\\u00e3o.\"}}",
+      "is_active": true,
+      "created_at": "2025-10-27T00:20:13.996214+00:00",
+      "updated_at": "2025-10-27T00:20:13.996214+00:00"
+    }
+  },
+  "validacao": {
+    "has_campaign": false,
+    "has_character": false,
+    "has_world_entities": false
+  },
+  "worlds": {
+    "encontrado": false,
+    "quantidade": 0,
+    "timestamp": "2025-10-26T21:20:15.484738"
+  },
+  "execution_logs": {
+    "encontrado": false,
+    "quantidade": 0,
+    "timestamp": "2025-10-26T21:20:15.851872"
+  }
+}
+
+user_id:
+bfd809ef-95d8-4479-a896-66af3a34f9d6
+
+dados_requisicao:
+{
+  "name": "Campanha de Teste Completo",
+  "genre_tags": [
+    "fantasy",
+    "medieval",
+    "magic"
+  ],
+  "inspiration": "Uma jornada épica em um mundo de magia e mistério",
+  "master_personality": "serious_dark",
+  "character_concept": "Um mago estudioso que busca conhecimentos proibidos",
+  "character_name": "Eldrin",
+  "character_archetypes": [
+    "scholar",
+    "mystic",
+    "survivor"
+  ],
+  "character_approaches": [
+    "careful",
+    "clever"
+  ]
+}
+
+campaign_id:
+15d6aac9-30fb-44f5-98d6-4429f85c2363
+
+timestamp_fim:
+2025-10-26T21:20:15.852170
+
+duracao_segundos:
+21.935897
+

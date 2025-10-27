@@ -3,8 +3,11 @@ Estado do grafo para o sistema multiagente LangGraph.
 Define a estrutura de dados compartilhada entre todos os nós do grafo.
 """
 
-from typing import TypedDict, Optional, Any
+from typing import TypedDict, Optional, Any, List, Dict
 from datetime import datetime
+from dataclasses import dataclass, field
+
+from app.models.session import ChatMessage
 
 
 class AgentState(TypedDict):
@@ -60,3 +63,28 @@ class VectorStoreUpdate(TypedDict):
     metadata: dict  # Metadados para o chunk
     world_id: str  # ID do mundo
     user_id: str  # ID do usuário
+
+
+@dataclass
+class GraphState:
+    """
+    Estado do grafo para o sistema multiagente de chat RPG.
+    Utilizado para testes e execução do fluxo completo.
+    """
+    
+    session_id: str
+    campaign_id: str
+    user_id: str
+    messages: List[ChatMessage] = field(default_factory=list)
+    current_message: Optional[ChatMessage] = None
+    world_context: List[Dict[str, Any]] = field(default_factory=list)
+    execution_log: List[Dict[str, Any]] = field(default_factory=list)
+    
+    def add_message(self, message: ChatMessage) -> None:
+        """Adiciona uma mensagem ao histórico."""
+        self.messages.append(message)
+        self.current_message = message
+    
+    def add_execution_log(self, log_entry: Dict[str, Any]) -> None:
+        """Adiciona uma entrada ao log de execução."""
+        self.execution_log.append(log_entry)

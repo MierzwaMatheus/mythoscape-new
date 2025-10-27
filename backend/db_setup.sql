@@ -96,6 +96,18 @@ BEGIN
         ALTER TABLE worlds ADD COLUMN campaign_time JSONB DEFAULT '{"day": 1, "hour": 12, "minute": 0, "season": "spring", "year": 1}';
         RAISE NOTICE '%', 'Coluna campaign_time adicionada à tabela worlds';
     END IF;
+    
+    -- Adicionar campaign_id se não existir
+    IF NOT column_exists('worlds', 'campaign_id') THEN
+        ALTER TABLE worlds ADD COLUMN campaign_id UUID REFERENCES campaigns(id);
+        RAISE NOTICE '%', 'Coluna campaign_id adicionada à tabela worlds';
+    END IF;
+    
+    -- Adicionar world_data se não existir
+    IF NOT column_exists('worlds', 'world_data') THEN
+        ALTER TABLE worlds ADD COLUMN world_data JSONB DEFAULT '{}';
+        RAISE NOTICE '%', 'Coluna world_data adicionada à tabela worlds';
+    END IF;
 END $$;
 DO $$
 BEGIN
@@ -172,6 +184,34 @@ CREATE TABLE IF NOT EXISTS characters (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Verificar e adicionar colunas necessárias à tabela characters
+DO $$
+BEGIN
+    -- Adicionar campaign_id se não existir
+    IF NOT column_exists('characters', 'campaign_id') THEN
+        ALTER TABLE characters ADD COLUMN campaign_id UUID REFERENCES campaigns(id);
+        RAISE NOTICE '%', 'Coluna campaign_id adicionada à tabela characters';
+    END IF;
+    
+    -- Adicionar character_class se não existir
+    IF NOT column_exists('characters', 'character_class') THEN
+        ALTER TABLE characters ADD COLUMN character_class VARCHAR(100);
+        RAISE NOTICE '%', 'Coluna character_class adicionada à tabela characters';
+    END IF;
+    
+    -- Adicionar level se não existir
+    IF NOT column_exists('characters', 'level') THEN
+        ALTER TABLE characters ADD COLUMN level INTEGER DEFAULT 1;
+        RAISE NOTICE '%', 'Coluna level adicionada à tabela characters';
+    END IF;
+    
+    -- Adicionar character_data se não existir
+    IF NOT column_exists('characters', 'character_data') THEN
+        ALTER TABLE characters ADD COLUMN character_data JSONB DEFAULT '{}';
+        RAISE NOTICE '%', 'Coluna character_data adicionada à tabela characters';
+    END IF;
+END $$;
 
 -- Adicionar foreign key constraints se não existirem
 DO $$

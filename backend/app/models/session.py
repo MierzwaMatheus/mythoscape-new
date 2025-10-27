@@ -1,8 +1,9 @@
 """Modelos Pydantic para gerenciamento de sessões de jogo."""
 
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Literal
 from uuid import UUID, uuid4
+from enum import Enum
 from pydantic import BaseModel, Field
 
 
@@ -12,6 +13,26 @@ class SessionStatus(str):
     PAUSED = "paused" 
     COMPLETED = "completed"
     ARCHIVED = "archived"
+
+
+class MessageRole(str, Enum):
+    """Papéis possíveis para mensagens de chat."""
+    USER = "user"
+    ASSISTANT = "assistant"
+    SYSTEM = "system"
+    FUNCTION = "function"
+
+
+class ChatMessage(BaseModel):
+    """Modelo para mensagens de chat em uma sessão."""
+    id: str = Field(default_factory=lambda: str(uuid4()))
+    role: MessageRole
+    content: str
+    timestamp: int = Field(default_factory=lambda: int(datetime.now().timestamp()))
+    metadata: Optional[dict] = Field(default_factory=dict)
+    
+    class Config:
+        use_enum_values = True
 
 
 class CreateSessionRequest(BaseModel):

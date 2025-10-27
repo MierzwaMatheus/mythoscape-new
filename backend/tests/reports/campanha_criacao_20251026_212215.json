@@ -1,0 +1,147 @@
+{
+  "test_name": "campanha_criacao",
+  "timestamp": "2025-10-26T21:22:15.227489",
+  "success": false,
+  "details": "Alguns dados essenciais da campanha estão faltando",
+  "data": {
+    "timestamp_inicio": "2025-10-26T21:21:53.031796",
+    "etapas": [
+      {
+        "etapa": "autenticacao",
+        "sucesso": true,
+        "timestamp": "2025-10-26T21:21:53.916626"
+      },
+      {
+        "etapa": "preparacao_requisicao",
+        "sucesso": true,
+        "timestamp": "2025-10-26T21:21:53.917291"
+      },
+      {
+        "etapa": "criacao_campanha",
+        "sucesso": true,
+        "timestamp": "2025-10-26T21:22:14.333393"
+      }
+    ],
+    "dados_campanha": {
+      "campaign": {
+        "name": "Campanha de Teste Completo",
+        "genre": "fantasy, medieval, magic",
+        "inspiration": "Uma jornada épica em um mundo de magia e mistério",
+        "setting": {
+          "world_description": "O mundo de Eldoria é um vasto reino repleto de antigas florestas encantadas, montanhas misteriosas e cidades majestosas. A magia é tecida no próprio tecido da realidade, e muitas vezes decide o destino de reinos inteiros. No entanto, a sede por poder e o desejo de conhecimento proibido criam constantes intrigas e conflitos entre as várias facções de magos, guerreiros e criaturas místicas que habitam estas terras."
+        },
+        "npcs": [
+          {
+            "name": "Eldrin, o Ancião",
+            "description": "Um velho sábio de longas barbas brancas e olhos que brilham com a luz do conhecimento. Eldrin é um mestre arquimago que guia jovens aprendizes em sua torre isolada no topo da Montanha das Lamentações.",
+            "alignment": "Neutral Good"
+          },
+          {
+            "name": "Lady Seraphina",
+            "description": "Uma influente nobre de uma das mais poderosas famílias da cidade de Valoria. Conhecida por sua beleza e inteligência, Seraphina esconde um segredo obscuro que pode mudar o destino de Eldoria.",
+            "alignment": "Chaotic Neutral"
+          },
+          {
+            "name": "Garruk, o Mercador",
+            "description": "Um comerciante astuto e carismático que faz negócios em várias cidades. Ele possui contatos em todo Eldoria e sempre tem itens raros e informações preciosas à venda.",
+            "alignment": "True Neutral"
+          }
+        ],
+        "locations": [
+          {
+            "name": "A Torre das Sombras",
+            "description": "Uma antiga torre de pedra negra que se ergue solitária na Planície da Desolação. Dizem que ela abriga segredos arcanos e que sua biblioteca contém tomos proibidos de magia."
+          },
+          {
+            "name": "Floresta de Esmeralda",
+            "description": "Uma vasta floresta onde o tempo parece se distorcer. Criaturas feéricas e espíritos antigos se escondem entre as árvores, e apenas os mais corajosos ou tolos se atrevem a entrar sem guia."
+          }
+        ],
+        "opening_scene": {
+          "description": "A chuva caía em torrentes sobre a cidade de Valoria, transformando suas ruas sinuosas em rios de lama. Relâmpagos iluminavam o céu noturno, revelando sombras dançantes nas paredes de pedra das casas. Em uma taverna esfumaçada, o mago estudioso se sentava sozinho em um canto escuro, com um tomo antigo aberto diante dele. O som de vozes sussurrantes e música abafada preenchia o ar, enquanto ele mergulhava mais fundo nos segredos proibidos do livro. Mal sabia ele que naquela noite chuvosa sua jornada rumo ao desconhecido estava apenas começando."
+        },
+        "protagonist": {
+          "character_concept": "Um mago estudioso que busca conhecimentos proibidos",
+          "archetypes": [
+            "scholar",
+            "mystic",
+            "survivor"
+          ],
+          "approaches": {
+            "careful": 3,
+            "clever": 4
+          },
+          "inventory": [
+            "Staff of Arcane Wisdom",
+            "Tome of Forbidden Knowledge",
+            "Robes of the Scholar"
+          ],
+          "backstory": "Nascido em uma pequena vila, o protagonista sempre foi fascinado por histórias de magia e mistério. Ele passou anos estudando em uma academia arcana, mas sua curiosidade por conhecimentos proibidos o levou a buscar segredos que muitos acreditam serem perigosos demais para serem desvendados."
+        },
+        "initial_time": "Ano 1423 do Calendário de Eldoria, início da primavera",
+        "initial_mission": {
+          "description": "O protagonista deve investigar estranhas ocorrências na Floresta de Esmeralda, onde rumores falam de uma nova ameaça mágica emergindo. Eldrin, o Ancião, pede que ele descubra a fonte do distúrbio e, se possível, aprenda mais sobre o que está causando o desequilíbrio na magia da região."
+        }
+      },
+      "id": "a2d68d83-5c4d-47de-821d-fc312268e41f"
+    },
+    "persistencia": {
+      "campaigns": {
+        "encontrado": true,
+        "timestamp": "2025-10-26T21:22:14.555902",
+        "dados": {
+          "id": "a2d68d83-5c4d-47de-821d-fc312268e41f",
+          "user_id": "bfd809ef-95d8-4479-a896-66af3a34f9d6",
+          "name": "Campanha de Teste Completo",
+          "genre_tags": "[\"fantasy\", \"medieval\", \"magic\"]",
+          "master_personality": "serious_dark",
+          "world_description": "",
+          "campaign_data": "{\"campaign\": {\"name\": \"Campanha de Teste Completo\", \"genre\": \"fantasy, medieval, magic\", \"inspiration\": \"Uma jornada \\u00e9pica em um mundo de magia e mist\\u00e9rio\", \"setting\": {\"world_description\": \"O mundo de Eldoria \\u00e9 um vasto reino repleto de antigas florestas encantadas, montanhas misteriosas e cidades majestosas. A magia \\u00e9 tecida no pr\\u00f3prio tecido da realidade, e muitas vezes decide o destino de reinos inteiros. No entanto, a sede por poder e o desejo de conhecimento proibido criam constantes intrigas e conflitos entre as v\\u00e1rias fac\\u00e7\\u00f5es de magos, guerreiros e criaturas m\\u00edsticas que habitam estas terras.\"}, \"npcs\": [{\"name\": \"Eldrin, o Anci\\u00e3o\", \"description\": \"Um velho s\\u00e1bio de longas barbas brancas e olhos que brilham com a luz do conhecimento. Eldrin \\u00e9 um mestre arquimago que guia jovens aprendizes em sua torre isolada no topo da Montanha das Lamenta\\u00e7\\u00f5es.\", \"alignment\": \"Neutral Good\"}, {\"name\": \"Lady Seraphina\", \"description\": \"Uma influente nobre de uma das mais poderosas fam\\u00edlias da cidade de Valoria. Conhecida por sua beleza e intelig\\u00eancia, Seraphina esconde um segredo obscuro que pode mudar o destino de Eldoria.\", \"alignment\": \"Chaotic Neutral\"}, {\"name\": \"Garruk, o Mercador\", \"description\": \"Um comerciante astuto e carism\\u00e1tico que faz neg\\u00f3cios em v\\u00e1rias cidades. Ele possui contatos em todo Eldoria e sempre tem itens raros e informa\\u00e7\\u00f5es preciosas \\u00e0 venda.\", \"alignment\": \"True Neutral\"}], \"locations\": [{\"name\": \"A Torre das Sombras\", \"description\": \"Uma antiga torre de pedra negra que se ergue solit\\u00e1ria na Plan\\u00edcie da Desola\\u00e7\\u00e3o. Dizem que ela abriga segredos arcanos e que sua biblioteca cont\\u00e9m tomos proibidos de magia.\"}, {\"name\": \"Floresta de Esmeralda\", \"description\": \"Uma vasta floresta onde o tempo parece se distorcer. Criaturas fe\\u00e9ricas e esp\\u00edritos antigos se escondem entre as \\u00e1rvores, e apenas os mais corajosos ou tolos se atrevem a entrar sem guia.\"}], \"opening_scene\": {\"description\": \"A chuva ca\\u00eda em torrentes sobre a cidade de Valoria, transformando suas ruas sinuosas em rios de lama. Rel\\u00e2mpagos iluminavam o c\\u00e9u noturno, revelando sombras dan\\u00e7antes nas paredes de pedra das casas. Em uma taverna esfuma\\u00e7ada, o mago estudioso se sentava sozinho em um canto escuro, com um tomo antigo aberto diante dele. O som de vozes sussurrantes e m\\u00fasica abafada preenchia o ar, enquanto ele mergulhava mais fundo nos segredos proibidos do livro. Mal sabia ele que naquela noite chuvosa sua jornada rumo ao desconhecido estava apenas come\\u00e7ando.\"}, \"protagonist\": {\"character_concept\": \"Um mago estudioso que busca conhecimentos proibidos\", \"archetypes\": [\"scholar\", \"mystic\", \"survivor\"], \"approaches\": {\"careful\": 3, \"clever\": 4}, \"inventory\": [\"Staff of Arcane Wisdom\", \"Tome of Forbidden Knowledge\", \"Robes of the Scholar\"], \"backstory\": \"Nascido em uma pequena vila, o protagonista sempre foi fascinado por hist\\u00f3rias de magia e mist\\u00e9rio. Ele passou anos estudando em uma academia arcana, mas sua curiosidade por conhecimentos proibidos o levou a buscar segredos que muitos acreditam serem perigosos demais para serem desvendados.\"}, \"initial_time\": \"Ano 1423 do Calend\\u00e1rio de Eldoria, in\\u00edcio da primavera\", \"initial_mission\": {\"description\": \"O protagonista deve investigar estranhas ocorr\\u00eancias na Floresta de Esmeralda, onde rumores falam de uma nova amea\\u00e7a m\\u00e1gica emergindo. Eldrin, o Anci\\u00e3o, pede que ele descubra a fonte do dist\\u00farbio e, se poss\\u00edvel, aprenda mais sobre o que est\\u00e1 causando o desequil\\u00edbrio na magia da regi\\u00e3o.\"}}}",
+          "is_active": true,
+          "created_at": "2025-10-27T00:22:13.431337+00:00",
+          "updated_at": "2025-10-27T00:22:13.431337+00:00"
+        }
+      },
+      "validacao": {
+        "has_campaign": true,
+        "has_character": false,
+        "has_world_entities": false
+      },
+      "worlds": {
+        "encontrado": false,
+        "quantidade": 0,
+        "timestamp": "2025-10-26T21:22:14.789606"
+      },
+      "execution_logs": {
+        "encontrado": false,
+        "quantidade": 0,
+        "timestamp": "2025-10-26T21:22:15.227150"
+      }
+    },
+    "user_id": "bfd809ef-95d8-4479-a896-66af3a34f9d6",
+    "dados_requisicao": {
+      "name": "Campanha de Teste Completo",
+      "genre_tags": [
+        "fantasy",
+        "medieval",
+        "magic"
+      ],
+      "inspiration": "Uma jornada épica em um mundo de magia e mistério",
+      "master_personality": "serious_dark",
+      "character_concept": "Um mago estudioso que busca conhecimentos proibidos",
+      "character_name": "Eldrin",
+      "character_archetypes": [
+        "scholar",
+        "mystic",
+        "survivor"
+      ],
+      "character_approaches": [
+        "careful",
+        "clever"
+      ]
+    },
+    "campaign_id": "a2d68d83-5c4d-47de-821d-fc312268e41f",
+    "timestamp_fim": "2025-10-26T21:22:15.227434",
+    "duracao_segundos": 22.195638
+  }
+}

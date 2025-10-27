@@ -101,3 +101,16 @@ Retorne APENAS os agentes que são realmente relevantes para processar esta entr
     def get_available_agents(self) -> list[str]:
         """Retorna lista de agentes especialistas disponíveis."""
         return [tool.__name__.replace("ExpertTool", "").lower() for tool in ROUTING_TOOLS]
+        
+    async def route(self, user_input: str, world_context: dict = None) -> list[dict]:
+        """
+        Método de compatibilidade para testes - redireciona para route_request.
+        
+        Args:
+            user_input: Entrada do usuário
+            world_context: Contexto do mundo atual (opcional)
+            
+        Returns:
+            Lista de dicionários com agente e instruções específicas
+        """
+        return await self.route_request(user_input, world_context)

@@ -1,0 +1,17 @@
+{
+  "test_name": "chat_multiagente",
+  "timestamp": "2025-10-26T21:22:15.234082",
+  "success": false,
+  "details": "Erro durante o teste do chat multiagente: typing.Union[app.agents.routing_tools.WorldExpertTool, app.agents.routing_tools.CharacterExpertTool, app.agents.routing_tools.MissionExpertTool, app.agents.routing_tools.RulesExpertTool, app.agents.routing_tools.TimeExpertTool, app.agents.routing_tools.ItemsExpertTool, app.agents.routing_tools.PlotExpertTool, app.agents.routing_tools.SocialExpertTool] is not a module, class, method, or function.",
+  "data": {
+    "timestamp_inicio": "2025-10-26T21:22:15.230792",
+    "etapas": [],
+    "campaign_id": "a2d68d83-5c4d-47de-821d-fc312268e41f",
+    "user_id": "bfd809ef-95d8-4479-a896-66af3a34f9d6",
+    "mensagens": [],
+    "persistencia": {},
+    "erro": "Erro durante o teste do chat multiagente: typing.Union[app.agents.routing_tools.WorldExpertTool, app.agents.routing_tools.CharacterExpertTool, app.agents.routing_tools.MissionExpertTool, app.agents.routing_tools.RulesExpertTool, app.agents.routing_tools.TimeExpertTool, app.agents.routing_tools.ItemsExpertTool, app.agents.routing_tools.PlotExpertTool, app.agents.routing_tools.SocialExpertTool] is not a module, class, method, or function.",
+    "timestamp_fim": "2025-10-26T21:22:15.234046",
+    "duracao_segundos": 0.003254
+  }
+}
