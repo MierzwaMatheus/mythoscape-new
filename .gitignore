@@ -1,1 +1,14 @@
 backend/.env.local
+# Python virtualenv & artifacts
+backend/Lib/
+backend/Include/
+backend/Scripts/
+backend/pyvenv.cfg
+**/__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+env/
+.env.local
